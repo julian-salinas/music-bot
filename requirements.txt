@@ -1,0 +1,2 @@
+youtube-dl==2021.6.6
+discord.py==1.7.3
