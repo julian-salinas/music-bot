@@ -139,3 +139,16 @@ class MusicCog(commands.Cog):
         else:
             song = self.search_youtube("https://www.youtube.com/watch?v=KULEBLsb0fg")
             self.music_queue.append([song, voice_channel])
+
+
+    @commands.command()
+    async def help_pls(self, ctx):
+        output = '''
+        *Comandos disponibles del bot:*
+        **/play** `<nombre de la cancion o link de youtube>` → Poner un tema
+        **/queue** → Ver todos los temas que tenés en la cola
+        **/next** → Pasar al siguiente tema
+        **/pausar** → adivina
+        **/seguir** → Reanudar musica
+        '''
+        await ctx.send(output)
