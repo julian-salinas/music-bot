@@ -1,5 +1,5 @@
 # Music bot created for friends
-##After groovy and rythm got banned by youtube the study server with my friends ran out of a bot that plays music so I created this bot to solve that :)
+## After groovy and rythm got banned by youtube the study server with my friends ran out of a bot that plays music so I created this bot to solve that :)
 
 #
 
