@@ -136,7 +136,7 @@ class MusicCog(commands.Cog):
         **/play** `<nombre de la cancion o link de youtube>` → Poner un tema
         **/queue** → Ver todos los temas que tenés en la cola
         **/next** → Pasar al siguiente tema
-        **/pausar** → adivina
-        **/seguir** → Reanudar musica
+        **/p** → adivina
+        **/r** → Reanudar musica
         '''
         await ctx.send(output)
