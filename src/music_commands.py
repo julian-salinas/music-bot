@@ -128,18 +128,6 @@ class MusicCog(commands.Cog):
     async def reanudar(self, ctx):
         self.voice_channel.resume()
 
-    
-    @commands.command()
-    async def mr305(self, ctx):
-        voice_channel = ctx.author.voice.channel
-        if not voice_channel:  
-            # the person who sent the command must be in a voice channel
-            await ctx.send("Para un toque, tenes que estar conectado a un canal de voz para escuchar musica")
-
-        else:
-            song = self.search_youtube("https://www.youtube.com/watch?v=KULEBLsb0fg")
-            self.music_queue.append([song, voice_channel])
-
 
     @commands.command()
     async def help_pls(self, ctx):
@@ -148,7 +136,7 @@ class MusicCog(commands.Cog):
         **/play** `<nombre de la cancion o link de youtube>` → Poner un tema
         **/queue** → Ver todos los temas que tenés en la cola
         **/next** → Pasar al siguiente tema
-        **/pausar** → adivina
-        **/seguir** → Reanudar musica
+        **/p** → Pausar Musica
+        **/r** → Reanudar musica
         '''
         await ctx.send(output)
