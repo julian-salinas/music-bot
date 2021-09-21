@@ -119,13 +119,13 @@ class MusicCog(commands.Cog):
             await self.play_music()
 
 
-    @commands.command()
+    @commands.command(aliases = ['p'])
     async def pausar(self, ctx):
         self.voice_channel.pause()
 
 
-    @commands.command()
-    async def seguir(self, ctx):
+    @commands.command(aliases = ['r'])
+    async def resume(self, ctx):
         self.voice_channel.resume()
 
 
