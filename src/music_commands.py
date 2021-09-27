@@ -23,7 +23,7 @@ class MusicCog(commands.Cog):
             'options' : '-vn'
         }
 
-        self.voice_channel = ''
+        self.vc = ''
 
     def search_youtube(self, item):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
@@ -47,7 +47,7 @@ class MusicCog(commands.Cog):
             # remove currently playing song
             self.music_queue.pop(0)
 
-            self.voice_channel.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
 
         else:
             self.is_playing = False
@@ -60,22 +60,22 @@ class MusicCog(commands.Cog):
             song_url = self.music_queue[0][0]['source']
 
             # connect to voice chanel
-            if self.voice_channel == "" or not self.voice_channel.is_connected():
-                self.voice_channel = await self.music_queue[0][1].connect()
+            if (self.vc == "") or (not self.vc.is_connected()) or (not self.vc):
+                self.vc = await self.music_queue[0][1].connect()
 
             else:
-                self.voice_channel = await self.bot.move_to(self.music_queue[0][1])
+                await self.vc.move_to(self.music_queue[0][1])
                         
             # remove first element of the queue (currently playing)
             self.music_queue.pop(0)
 
-            self.voice_channel.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
         
         else:
             self.is_playing = False
     
 
-    @commands.command()
+    @commands.command(help = "-play <nombre de la cancion o url en youtube> para tocar una cancion")
     async def play(self, ctx, *args):
         query = " ".join(args)
 
@@ -97,10 +97,10 @@ class MusicCog(commands.Cog):
                     await self.play_music()
                 
         
-    @commands.command()
+    @commands.command(help = "Ver las canciones que tenés en la cola")
     async def queue(self, ctx):
         retval = ""
-        for i in range(0, len(self.music_queue)):
+        for i in range(len(self.music_queue)):
             retval += self.music_queue[i][0]['title'] + "\n"
         
         print(retval)
@@ -108,25 +108,25 @@ class MusicCog(commands.Cog):
             await ctx.send(retval)
         
         else:
-            await ctx.send("No music in queue")
+            await ctx.send("Tenés la cola vacía")
         
 
-    @commands.command()
-    async def next(self, ctx):
-        if self.voice_channel != "":
-            self.voice_channel.stop()
+    @commands.command(aliases = ['next'], help = "Pasar a la siguiente canción")
+    async def skip(self, ctx):
+        if self.vc != "" and self.vc:
+            self.vc.stop()
             # play next in queue if exist
             await self.play_music()
 
 
-    @commands.command(aliases = ['p'])
-    async def pausar(self, ctx):
-        self.voice_channel.pause()
+    @commands.command(aliases = ['p'], help = "Pausar")
+    async def pause(self, ctx):
+        self.vc.pause()
 
 
-    @commands.command(aliases = ['r'])
+    @commands.command(aliases = ['r'], help = "Reanudar musica")
     async def resume(self, ctx):
-        self.voice_channel.resume()
+        self.vc.resume()
 
 
     @commands.command()
@@ -140,3 +140,8 @@ class MusicCog(commands.Cog):
         **/r** → Reanudar musica
         '''
         await ctx.send(output)
+
+
+    @commands.command(aliases = ['disc'], help = "Desconectar bot")
+    async def disconnect(self, ctx):
+        await self.vc.disconnect()
