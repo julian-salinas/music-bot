@@ -75,16 +75,16 @@ class MusicCog(commands.Cog):
             self.is_playing = False
     
 
-    @commands.command(help = "-play <nombre de la cancion o url en youtube> para tocar una cancion")
+    @commands.command(help = "Poner una canción")
     async def play(self, ctx, *args):
         query = " ".join(args)
 
         voice_channel = ctx.author.voice.channel
-        if not voice_channel:  
+        if not voice_channel:  # The bot wont play any music if the author of the message is not at a voice channel
             # the person who sent the command must be in a voice channel
             await ctx.send("Para un toque, tenes que estar conectado a un canal de voz para escuchar musica")
 
-        else:
+        else:  #  Search and play the song
             song = self.search_youtube(query)
             if type(song) == type(True):
                 await ctx.send("No pude encontrar la cancion :(")
@@ -97,8 +97,8 @@ class MusicCog(commands.Cog):
                     await self.play_music()
                 
         
-    @commands.command(help = "Ver las canciones que tenés en la cola")
-    async def queue(self, ctx):
+    @commands.command(help = "Ver las canciones agregadas a la cola")
+    async def queue(self, ctx):  # Show the queue in a message
         retval = ""
         for i in range(len(self.music_queue)):
             retval += self.music_queue[i][0]['title'] + "\n"
@@ -108,11 +108,11 @@ class MusicCog(commands.Cog):
             await ctx.send(retval)
         
         else:
-            await ctx.send("Tenés la cola vacía")
+            await ctx.send("No hay canciones agregadas a la cola")
         
 
     @commands.command(aliases = ['next'], help = "Pasar a la siguiente canción")
-    async def skip(self, ctx):
+    async def skip(self, ctx):  # Skip to the next song
         if self.vc != "" and self.vc:
             self.vc.stop()
             # play next in queue if exist
@@ -129,19 +129,7 @@ class MusicCog(commands.Cog):
         self.vc.resume()
 
 
-    @commands.command()
-    async def help_pls(self, ctx):
-        output = '''
-        *Comandos disponibles del bot:*
-        **/play** `<nombre de la cancion o link de youtube>` → Poner un tema
-        **/queue** → Ver todos los temas que tenés en la cola
-        **/next** → Pasar al siguiente tema
-        **/p** → adivina
-        **/r** → Reanudar musica
-        '''
-        await ctx.send(output)
-
-
     @commands.command(aliases = ['disc'], help = "Desconectar bot")
     async def disconnect(self, ctx):
         await self.vc.disconnect()
+        
