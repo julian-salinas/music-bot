@@ -1,7 +1,5 @@
 import discord
-from discord import voice_client
 from discord.ext import commands
-from discord.utils import get
 
 from youtube_dl import YoutubeDL
 
@@ -82,7 +80,7 @@ class MusicCog(commands.Cog):
         voice_channel = ctx.author.voice.channel
         if not voice_channel:  # The bot wont play any music if the author of the message is not at a voice channel
             # the person who sent the command must be in a voice channel
-            await ctx.send("Para un toque, tenes que estar conectado a un canal de voz para escuchar musica")
+            await ctx.send("Para un toque! tenes que estar conectado a un canal de voz para escuchar musica!")
 
         else:  #  Search and play the song
             song = self.search_youtube(query)
@@ -90,7 +88,7 @@ class MusicCog(commands.Cog):
                 await ctx.send("No pude encontrar la cancion :(")
             
             else:
-                await ctx.send("Cancion agregada a la cola (tuya)")
+                await ctx.send("Cancion agregada a la cola")
                 self.music_queue.append([song, voice_channel])
 
                 if not self.is_playing:
