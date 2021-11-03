@@ -1,21 +1,16 @@
-FROM ubuntu
+FROM python:3.9.5
 
-# RUN apt-get update
+WORKDIR /home/grubi
 
-# Added
-RUN apt-get -y update
-RUN apt-get -y upgrade
-RUN apt-get install -y ffmpeg
+# Actualizar repositorios e instalar ffmpeg
+RUN apt-get -y update && \
+    apt-get -y install --no-install-recommends ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
-# Instalar python y pip
-RUN apt-get install python3 python3-dev -y
-RUN apt install python3-pip -y
 
 # Instalar requerimientos
-COPY requirements.txt .
+COPY . .
 RUN pip install -r requirements.txt
 
-WORKDIR /app
-
 # docker build -t <container-name> .
-# docker run -it -v <repo path>:/app <container-name> bash 
+# docker run -it -v <repo path>:/home/grubi <container-name> bash 
