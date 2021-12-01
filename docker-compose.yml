@@ -1,0 +1,12 @@
+services:
+  grubi:
+    tty: true
+    build:
+      context: .
+      dockerfile : docker/Dockerfile
+    
+    env_file:
+      - .env 
+    image: music_bot:v1
+    container_name: music_bot
+  

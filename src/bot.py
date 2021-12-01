@@ -16,7 +16,7 @@ Bot.add_cog(MusicCog(Bot))
 
 @Bot.event
 async def on_ready():
-    await Bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="AMOGUS"))
+    await Bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="MOGUS"))
 
 if __name__ == '__main__':
     print("Bot corriendo!")
