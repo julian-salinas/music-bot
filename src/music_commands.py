@@ -40,7 +40,7 @@ class MusicCog(commands.Cog):
     def play_next(self): 
         # this is a recursive function, after play a song, calls 
         # itself for playing the next song until the queue is empty
-        self.is_playing = True
+        self.is_playing = True 
         if len(self.music_queue) > 0:
 
             # get the first utl of the queue
@@ -56,6 +56,7 @@ class MusicCog(commands.Cog):
             query = "".join(next_song)
             song = self.search_youtube(query)
 
+            print(song['source'])
             self.vc.play(discord.FFmpegPCMAudio(song['source'], **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
               
 
@@ -97,17 +98,13 @@ class MusicCog(commands.Cog):
     async def play(self, ctx, *args):
         query = " ".join(args)
 
-        voice_channel = ctx.author.voice.channel
-        if not voice_channel:  # The bot wont play any music if the author of the message is not at a voice channel
-            # the person who sent the command must be in a voice channel
-            await ctx.send("Para un toque! tenes que estar conectado a un canal de voz para escuchar musica!")
-
-        else:  #  Search and play the song
+        try:
+            voice_channel = ctx.author.voice.channel  # Get the voice channel of the user who called the command
             song = self.search_youtube(query)
             self.artist_playing = str(song['title'].split('-'))
 
             if type(song) == type(True):
-                await ctx.send("No pude encontrar la cancion :(")
+                await ctx.send("No pude encontrar la cancion :pensive:")
             
             else:
                 await ctx.send("Cancion agregada a la cola")
@@ -115,7 +112,11 @@ class MusicCog(commands.Cog):
 
                 if not self.is_playing:
                     await self.play_music(ctx)
-                
+
+        except Exception as e:  # The user who called the bot must be connected to a voice channel
+            print(e)
+            await ctx.send("Pará un poco, tenes que estar conectado a un canal de voz para escuchar musica :triumph:")
+
         
     @commands.command(help = "Ver las canciones agregadas a la cola")
     async def queue(self, ctx):  # Show the queue in a message
@@ -133,6 +134,7 @@ class MusicCog(commands.Cog):
 
     @commands.command(aliases = ['next'], help = "Pasar a la siguiente canción")
     async def skip(self, ctx):  # Skip to the next song
+
         if self.vc != "" and self.vc:
             self.vc.stop()
             # play next in queue if exist
