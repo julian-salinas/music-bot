@@ -1,5 +1,5 @@
 services:
-  grubi:
+  music-bot:
     tty: true
     build:
       context: .
@@ -7,6 +7,7 @@ services:
     
     env_file:
       - .env 
-    image: music_bot:v1
-    container_name: music_bot
-  
+    image: music-bot:v1
+    container_name: music-bot
+    volumes:
+      - .:/home/music-bot
