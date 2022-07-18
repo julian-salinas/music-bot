@@ -125,7 +125,7 @@ class MusicCog(commands.Cog):
 
 
         
-    @commands.command(help = "Ver las canciones agregadas a la cola")
+    @commands.command(aliases = ['aver', 'cola'], help = "Ver las canciones agregadas a la cola")
     async def queue(self, ctx):  # Show the queue in a message
         retval = ""
         for i in range(len(self.music_queue)):
@@ -139,7 +139,7 @@ class MusicCog(commands.Cog):
             await ctx.send("No hay canciones agregadas a la cola")
         
 
-    @commands.command(aliases = ['next'], help = "Pasar a la siguiente canción")
+    @commands.command(aliases = ['next', 'skip', 'siguiente', 'omitir'], help = "Pasar a la siguiente canción")
     async def skip(self, ctx):  # Skip to the next song
 
         if self.vc != "" and self.vc:
@@ -148,12 +148,12 @@ class MusicCog(commands.Cog):
             await self.play_music(ctx)
 
 
-    @commands.command(aliases = ['p'], help = "Pausar")
+    @commands.command(aliases = ['p', 'pause', 'pausa', 'pausar', 'stop'], help = "Pausar")
     async def pause(self, ctx):
         self.vc.pause()
 
 
-    @commands.command(aliases = ['r'], help = "Reanudar musica")
+    @commands.command(aliases = ['r', 'seguir', 'dale', 'reanudar', 'continuar'], help = "Reanudar musica")
     async def resume(self, ctx):
         self.vc.resume()
 
