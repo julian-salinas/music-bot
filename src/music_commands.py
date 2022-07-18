@@ -100,6 +100,11 @@ class MusicCog(commands.Cog):
 
         try:
             voice_channel = ctx.author.voice.channel  # Get the voice channel of the user who called the command
+        except Exception as e:  # The user who called the bot must be connected to a voice channel
+            print(e)
+            await ctx.send("Pará un poco, tenes que estar conectado a un canal de voz para escuchar musica :triumph:")
+
+        try:
             song = self.search_youtube(query)
             self.artist_playing = str(song['title'].split('-'))
 
@@ -112,10 +117,12 @@ class MusicCog(commands.Cog):
 
                 if not self.is_playing:
                     await self.play_music(ctx)
+        
+        except:
+            await ctx.message.add_reaction('🤣')
+            await ctx.message.add_reaction('👆')
+            await ctx.send("Che que me pasaste? :flushed: Tenés que usar >play nombre-del-tema para poner una canción")
 
-        except Exception as e:  # The user who called the bot must be connected to a voice channel
-            print(e)
-            await ctx.send("Pará un poco, tenes que estar conectado a un canal de voz para escuchar musica :triumph:")
 
         
     @commands.command(help = "Ver las canciones agregadas a la cola")
