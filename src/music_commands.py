@@ -46,7 +46,7 @@ class MusicCog(commands.Cog):
             song_url = self.music_queue[0][0]['source']
 
             # remove currently playing song
-            self.music_queue.pop(0)
+            self.current_song = self.music_queue.pop(0)
 
             self.vc.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
 
@@ -73,7 +73,7 @@ class MusicCog(commands.Cog):
                 await self.vc.move_to(self.music_queue[0][1])
                         
             # remove first element of the queue (currently playing)
-            self.music_queue.pop(0)
+            self.current_song = self.music_queue.pop(0)
 
             self.vc.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
         
@@ -161,3 +161,9 @@ class MusicCog(commands.Cog):
     async def disconnect(self, ctx):
         await self.vc.disconnect()
         
+    @commands.command(aliases = ['playing', 'sonando'], help = 'Mostrar canción sonando')
+    async def show_current_song(self, ctx):
+        try:
+            await ctx.send(self.current_song[0]['title'])
+        except:
+            await ctx.send('¿Cuál está sonando? Buena pregunta.')
