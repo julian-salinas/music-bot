@@ -160,6 +160,7 @@ class MusicCog(commands.Cog):
 
     @commands.command(aliases = ['disc'], help = "Desconectar bot")
     async def disconnect(self, ctx):
+        await ctx.message.add_reaction('👋')
         await self.vc.disconnect()
         
     @commands.command(aliases = ['playing', 'sonando'], help = 'Mostrar canción sonando')
