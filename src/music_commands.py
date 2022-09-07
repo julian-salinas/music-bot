@@ -146,16 +146,19 @@ class MusicCog(commands.Cog):
             self.vc.stop()
             # play next in queue if exist
             await self.play_music(ctx)
+            await ctx.message.add_reaction('⏭️')
 
 
     @commands.command(aliases = ['p' 'pausa', 'pausar', 'stop'], help = "Pausar")
     async def pause(self, ctx):
         self.vc.pause()
+        await ctx.message.add_reaction('⏸️')
 
 
     @commands.command(aliases = ['r', 'seguir', 'dale'], help = "Reanudar musica")
     async def resume(self, ctx):
         self.vc.resume()
+        await ctx.message.add_reaction('▶️')
 
 
     @commands.command(aliases = ['disc'], help = "Desconectar bot")
