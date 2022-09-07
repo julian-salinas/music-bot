@@ -1,3 +1,4 @@
+import random
 import discord
 from discord.ext import commands
 
@@ -163,7 +164,10 @@ class MusicCog(commands.Cog):
         
     @commands.command(aliases = ['playing', 'sonando'], help = 'Mostrar canción sonando')
     async def show_current_song(self, ctx):
+        complementary_emojis = ['🤓', '😄', '😎', '🤪', '💃', '🕺', '🎶']
         try:
-            await ctx.send(self.current_song[0]['title'])
+            await ctx.message.add_reaction('🔍')
+            await ctx.message.add_reaction('👀')
+            await ctx.send(f"{self.current_song[0]['title']} {random.choice(complementary_emojis)}")
         except:
-            await ctx.send('¿Cuál está sonando? Buena pregunta.')
+            await ctx.send('¿Cuál está sonando? Buena pregunta. :thinking:')
