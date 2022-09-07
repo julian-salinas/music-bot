@@ -6,6 +6,8 @@ from youtube_dl import YoutubeDL
 
 from fetch_next_video import fetch_next_video
 
+error_emojis = ['🙅‍♂️', '❌']
+
 class MusicCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -85,7 +87,9 @@ class MusicCog(commands.Cog):
 
             voice_channel = ctx.author.voice.channel  # Get the voice channel of the user who called the command
             if type(song) == type(True):
-                 await ctx.send("No pude encontrar la cancion :(")
+                await ctx.message.add_reaction('🤨')
+                await ctx.message.add_reaction('❔')
+                await ctx.send("No pude encontrar la cancion")
 
             else:  # Add the song to the queue
                 self.music_queue.append([song, voice_channel])
@@ -102,6 +106,8 @@ class MusicCog(commands.Cog):
             voice_channel = ctx.author.voice.channel  # Get the voice channel of the user who called the command
         except Exception as e:  # The user who called the bot must be connected to a voice channel
             print(e)
+            await ctx.message.add_reaction('😠')
+            await ctx.message.add_reaction('❌')
             await ctx.send("Pará un poco, tenes que estar conectado a un canal de voz para escuchar musica :triumph:")
 
         try:
@@ -112,7 +118,8 @@ class MusicCog(commands.Cog):
                 await ctx.send("No pude encontrar la cancion :pensive:")
             
             else:
-                await ctx.send("Cancion agregada a la cola")
+                await ctx.message.add_reaction('👍')
+                await ctx.send("Cancion agregada a la cola 👌")
                 self.music_queue.append([song, voice_channel])
 
                 if not self.is_playing:
@@ -127,6 +134,8 @@ class MusicCog(commands.Cog):
         
     @commands.command(aliases = ['aver', 'cola'], help = "Ver las canciones agregadas a la cola")
     async def queue(self, ctx):  # Show the queue in a message
+        await ctx.message.add_reaction('🧐')
+
         retval = ""
         for i in range(len(self.music_queue)):
             retval += self.music_queue[i][0]['title'] + "\n"
@@ -136,7 +145,7 @@ class MusicCog(commands.Cog):
             await ctx.send(retval)
         
         else:
-            await ctx.send("No hay canciones agregadas a la cola")
+            await ctx.send("Nop, nada por acá")
         
 
     @commands.command(aliases = ['next', 'siguiente', 'omitir'], help = "Pasar a la siguiente canción")
@@ -146,20 +155,23 @@ class MusicCog(commands.Cog):
             self.vc.stop()
             # play next in queue if exist
             await self.play_music(ctx)
+            await ctx.message.add_reaction('🥴')
             await ctx.message.add_reaction('⏭️')
 
 
     @commands.command(aliases = ['p' 'pausa', 'pausar', 'stop'], help = "Pausar")
     async def pause(self, ctx):
         self.vc.pause()
-        await ctx.message.add_reaction('⏸️')
+        await ctx.message.add_reaction('😤')
+        await ctx.message.add_reaction('✋')
 
 
     @commands.command(aliases = ['r', 'seguir', 'dale'], help = "Reanudar musica")
     async def resume(self, ctx):
         self.vc.resume()
-        await ctx.message.add_reaction('▶️')
-
+        await ctx.message.add_reaction('😌')
+        await ctx.message.add_reaction('🫱')
+        
 
     @commands.command(aliases = ['disc'], help = "Desconectar bot")
     async def disconnect(self, ctx):
