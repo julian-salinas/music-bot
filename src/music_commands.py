@@ -33,7 +33,6 @@ class MusicCog(commands.Cog):
                 info = ydl.extract_info("ytsearch:%s" % item, download = False)['entries'][0]
             except Exception:
                 return False
-        
         return {'source' : info['formats'][0]['url'], 'title' : info['title']}
     
 
@@ -139,7 +138,7 @@ class MusicCog(commands.Cog):
             await ctx.send("No hay canciones agregadas a la cola")
         
 
-    @commands.command(aliases = ['next', 'skip', 'siguiente', 'omitir'], help = "Pasar a la siguiente canción")
+    @commands.command(aliases = ['next', 'siguiente', 'omitir'], help = "Pasar a la siguiente canción")
     async def skip(self, ctx):  # Skip to the next song
 
         if self.vc != "" and self.vc:
@@ -148,12 +147,12 @@ class MusicCog(commands.Cog):
             await self.play_music(ctx)
 
 
-    @commands.command(aliases = ['p', 'pause', 'pausa', 'pausar', 'stop'], help = "Pausar")
+    @commands.command(aliases = ['p' 'pausa', 'pausar', 'stop'], help = "Pausar")
     async def pause(self, ctx):
         self.vc.pause()
 
 
-    @commands.command(aliases = ['r', 'seguir', 'dale', 'reanudar', 'continuar'], help = "Reanudar musica")
+    @commands.command(aliases = ['r', 'seguir', 'dale'], help = "Reanudar musica")
     async def resume(self, ctx):
         self.vc.resume()
 
