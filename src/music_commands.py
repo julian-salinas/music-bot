@@ -65,7 +65,6 @@ class MusicCog(commands.Cog):
               
 
     async def play_music(self, ctx):
-        self.is_playing = True
 
         if len(self.music_queue) > 0:
             song_url = self.music_queue[0][0]['source']
@@ -80,6 +79,7 @@ class MusicCog(commands.Cog):
             # remove first element of the queue (currently playing)
             self.current_song = self.music_queue.pop(0)
 
+            self.is_playing = True
             self.vc.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
         
         else:  # Add suggested song to the queue
@@ -97,9 +97,10 @@ class MusicCog(commands.Cog):
                 self.music_queue.append([song, voice_channel])
 
                 if not self.is_playing:
+                    self.is_playing = True
                     await self.play_music(ctx)  # Play the song
     
-    
+
     def fetch_next_video(self, artist_name : str):
         artist_name_for_url = re.sub(" ", "+", artist_name)
         html = urllib.request.urlopen('https://www.youtube.com/results?search_query=one+song+from' + str(artist_name_for_url))
@@ -209,3 +210,22 @@ class MusicCog(commands.Cog):
             await ctx.send(f"{self.current_song[0]['title']} {random.choice(complementary_emojis)}")
         except:
             await ctx.send('¿Cuál está sonando? Buena pregunta. :thinking:')
+
+
+    @commands.command(aliases = ["cambiar"], help = "Cambiar canción que está sonando actualmente")
+    async def change(self, ctx, *args):
+        query = " ".join(args)
+        song = self.search_youtube(query)
+
+        if type(song) == type(True):
+            await ctx.message.add_reaction('😩')
+            await ctx.send("No pude encontrar la cancion :pensive:")
+            return
+        
+        else:
+            self.current_song = [song, self.vc]
+            self.music_queue.insert(0, self.current_song)
+            await ctx.message.add_reaction('😈')
+            await ctx.message.add_reaction('🎶')
+            await ctx.send("Cambiando canción :smirk::ok_hand:")
+            await self.skip(ctx)

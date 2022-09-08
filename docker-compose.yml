@@ -1,5 +1,5 @@
 services:
-  music-bot:
+  music_bot:
     tty: true
     build:
       context: .
@@ -14,5 +14,7 @@ services:
         target: /home/music-bot/
 
     restart: always
+
+    container_name: grubi
 
     command: python src/bot.py
