@@ -1,5 +1,6 @@
+#!/usr/bin/env python
+
 import os
-import sys
 from discord.ext import commands
 import discord
 
@@ -14,5 +15,5 @@ async def on_ready():
     await Bot.change_presence(activity = discord.Activity(type = discord.ActivityType.playing, name = "MOGUS"))
 
 if __name__ == '__main__':
-    print("Bot corriendo!")
+    print("Bot corriendoOOOOOOO!")
     Bot.run(os.getenv('TOKEN'))

@@ -7,7 +7,7 @@ services:
     
     env_file:
       - .env 
-    container_name: music-bot
+    
     volumes:
       - type: bind
         source: .

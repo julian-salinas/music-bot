@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+
+import re
 import random
 import discord
+import urllib.request
+from unidecode import unidecode
 from discord.ext import commands
-
 from youtube_dl import YoutubeDL
-
-from fetch_next_video import fetch_next_video
 
 ERROR_EMOJIS = ['🙅‍♂️', '❌']
 
@@ -54,7 +56,7 @@ class MusicCog(commands.Cog):
             self.vc.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
 
         else:  # If the queue if empty, add a new song to it
-            next_song = fetch_next_video(self.artist_playing)
+            next_song = self.fetch_next_video(self.artist_playing)
             query = "".join(next_song)
             song = self.search_youtube(query)
 
@@ -81,7 +83,7 @@ class MusicCog(commands.Cog):
             self.vc.play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next())
         
         else:  # Add suggested song to the queue
-            next_song = fetch_next_video(self.artist_playing)  # Get song url from youtube (from the artist thats now playing)
+            next_song = self.fetch_next_video(self.artist_playing)  # Get song url from youtube (from the artist thats now playing)
             query = "".join(next_song)
             song = self.search_youtube(query) 
 
@@ -97,6 +99,22 @@ class MusicCog(commands.Cog):
                 if not self.is_playing:
                     await self.play_music(ctx)  # Play the song
     
+    
+    def fetch_next_video(self, artist_name : str):
+        artist_name_for_url = re.sub(" ", "+", artist_name)
+        html = urllib.request.urlopen('https://www.youtube.com/results?search_query=one+song+from' + str(artist_name_for_url))
+
+        video_ids = re.findall(r'watch\?v=(\S{11})', unidecode(html.read().decode()))
+        video_ids = self._remove_duplicates(video_ids)
+
+        return 'https://www.youtube.com/watch?v=' + random.choice(video_ids)
+
+
+    def _remove_duplicates(self, urls : list):
+        unique_urls = []
+        [unique_urls.append(url) for url in urls if url not in unique_urls]
+        return unique_urls
+
 
     @commands.command(help = "Poner una canción")
     async def play(self, ctx, *args):
@@ -109,13 +127,16 @@ class MusicCog(commands.Cog):
             await ctx.message.add_reaction('😠')
             await ctx.message.add_reaction('❌')
             await ctx.send("Pará un poco, tenes que estar conectado a un canal de voz para escuchar musica :triumph:")
+            return
 
         try:
             song = self.search_youtube(query)
             self.artist_playing = str(song['title'].split('-'))
 
             if type(song) == type(True):
+                await ctx.message.add_reaction('😩')
                 await ctx.send("No pude encontrar la cancion :pensive:")
+                return
             
             else:
                 await ctx.message.add_reaction('👍')
@@ -129,6 +150,7 @@ class MusicCog(commands.Cog):
             await ctx.message.add_reaction('🤣')
             await ctx.message.add_reaction('👆')
             await ctx.send("Che que me pasaste? :flushed: Tenés que usar >play nombre-del-tema para poner una canción")
+            return
 
         
     @commands.command(aliases = ['aver', 'cola'], help = "Ver las canciones agregadas a la cola")
