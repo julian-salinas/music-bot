@@ -6,7 +6,7 @@ from youtube_dl import YoutubeDL
 
 from fetch_next_video import fetch_next_video
 
-error_emojis = ['🙅‍♂️', '❌']
+ERROR_EMOJIS = ['🙅‍♂️', '❌']
 
 class MusicCog(commands.Cog):
     def __init__(self, bot):
@@ -130,7 +130,6 @@ class MusicCog(commands.Cog):
             await ctx.message.add_reaction('👆')
             await ctx.send("Che que me pasaste? :flushed: Tenés que usar >play nombre-del-tema para poner una canción")
 
-
         
     @commands.command(aliases = ['aver', 'cola'], help = "Ver las canciones agregadas a la cola")
     async def queue(self, ctx):  # Show the queue in a message
@@ -178,6 +177,7 @@ class MusicCog(commands.Cog):
         await ctx.message.add_reaction('👋')
         await self.vc.disconnect()
         
+
     @commands.command(aliases = ['playing', 'sonando'], help = 'Mostrar canción sonando')
     async def show_current_song(self, ctx):
         complementary_emojis = ['🤓', '😄', '😎', '🤪', '💃', '🕺', '🎶']
