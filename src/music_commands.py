@@ -286,7 +286,7 @@ class MusicCog(commands.Cog):
         await ctx.message.add_reaction("🫱")
         
 
-    @commands.command(aliases = ["disc"], help = "Desconectar bot")
+    @commands.command(aliases = ["disc", "chau"], help = "Desconectar bot")
     async def disconnect(self, ctx):
         """ 
         Disconnect the bot from the voice channel
@@ -308,7 +308,7 @@ class MusicCog(commands.Cog):
             await ctx.send("¿Cuál está sonando? Buena pregunta. :thinking:")
 
 
-    @commands.command(aliases = ["cambiar"], help = "Cambiar canción que está sonando actualmente")
+    @commands.command(aliases = ["cambiar", "ponela", "c"], help = "Cambiar canción que está sonando actualmente")
     async def change(self, ctx, *args):
         query = " ".join(args)
         song = self.__search_youtube__(query)
