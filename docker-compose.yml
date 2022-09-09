@@ -17,4 +17,4 @@ services:
 
     container_name: grubi
 
-    command: python src/bot.py
+    command: python src/main.py

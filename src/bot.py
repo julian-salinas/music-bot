@@ -1,19 +1,52 @@
 #!/usr/bin/env python
 
-import os
-from discord.ext import commands
-import discord
+import random
 
-from music_commands import MusicCog
+class MusicBot:
+    def __init__(self, voice_channel):
+        self.is_playing = False
+        self.music_queue = []
+        self.voice_channel = voice_channel
+        self.artist_playing = random.choice(["harry styles", "taylor swift", "drake", "eminem", "beyonce"])
+        self.current_song = None
+        self.voice_client = None
 
-Bot = commands.Bot(command_prefix = ">")
 
-Bot.add_cog(MusicCog(Bot))
+    def get_next_song(self):
+        return self.music_queue.pop(0)
 
-@Bot.event
-async def on_ready():
-    await Bot.change_presence(activity = discord.Activity(type = discord.ActivityType.playing, name = "MOGUS"))
+    def get_current_song(self):
+        return self.current_song
 
-if __name__ == "__main__":
-    print("Bot corriendo!")
-    Bot.run(os.getenv("TOKEN"))
+    def get_voice_channel(self):
+        return self.voice_channel
+
+    def get_artist_playing(self):
+        return self.artist_playing
+
+    def get_music_queue(self):
+        return self.music_queue
+
+    def get_voice_client(self):
+        return self.voice_client
+
+    def is_playing(self):
+        return self.is_playing
+
+    def alternate_state(self):
+        self.is_playing = not self.is_playing
+    
+    def music_queue_is_empty(self):
+        return not self.music_queue
+
+    def add_to_queue(self, *song):
+        self.music_queue.extend(song)
+
+    def sneak_song_in_queue(self, song):
+        self.music_queue.insert(0, song)
+
+    def set_artist_playing(self, artist):
+        self.artist_playing = artist
+
+    def set_current_song(self, song):
+        self.current_song = song
