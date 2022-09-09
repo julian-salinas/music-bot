@@ -79,7 +79,7 @@ class MusicCog(commands.Cog):
             if not instance.is_playing:
                 instance.alternate_state()
                 
-            instance.get_voice_channel().play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next(instance))
+            instance.get_voice_client().play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next(instance))
 
         else:  # If the queue if empty, add a new song to it
             next_song = self.fetch_next_video(instance.get_artist_playing())
@@ -89,23 +89,25 @@ class MusicCog(commands.Cog):
             if not instance.is_playing:
                 instance.alternate_state()
 
-            instance.get_voice_channel().play(discord.FFmpegPCMAudio(song["source"], **self.FFMPEG_OPTIONS), after = lambda x: self.play_next(instance))
+            instance.get_voice_client().play(discord.FFmpegPCMAudio(song["source"], **self.FFMPEG_OPTIONS), after = lambda x: self.play_next(instance))
    
    
-    async def play_music(self, ctx, instance):
+    async def play_music(self, ctx):
 
+        instance = self.get_instance_by_voice_channel(ctx.message.author.voice.channel)
+        
         if not instance.music_queue_is_empty():
             next_song = instance.music_queue[0]
             song_url = next_song[0]["source"]
 
             # connect to voice chanel
             try:
-                if not instance.get_voice_channel() or not instance.get_voice_channel().is_connected():
-                    instance.voice_channel = await next_song[1].connect()
+                if not (instance.get_voice_client() and instance.get_voice_client().is_connected()):
+                    instance.voice_client = await next_song[1].connect()
                 else:
-                    await instance.voice_channel.move_to(instance.music_queue[0][1])
+                    await instance.voice_client.move_to(instance.music_queue[0][1])
             except:
-                    instance.voice_channel = await next_song[1].connect()
+                    instance.voice_client = await next_song[1].connect()
                         
             # remove first element of the queue (currently playing)
             instance.set_current_song(instance.get_next_song())
@@ -113,7 +115,7 @@ class MusicCog(commands.Cog):
             if not instance.is_playing:
                 instance.alternate_state()
 
-            instance.get_voice_channel().play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next(instance))
+            instance.get_voice_client().play(discord.FFmpegPCMAudio(song_url, **self.FFMPEG_OPTIONS), after = lambda x: self.play_next(instance))
         
         else:  # Add suggested song to the queue
             next_song = self.fetch_next_video(instance.get_artist_playing())  # Get song url from youtube (from the artist thats now playing)
@@ -163,7 +165,7 @@ class MusicCog(commands.Cog):
 
                 try:
                     if not instance.is_playing:
-                        await self.play_music(ctx, instance)
+                        await self.play_music(ctx)
 
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -205,7 +207,7 @@ class MusicCog(commands.Cog):
     async def skip(self, ctx):  # Skip to the next song
         instance = self.get_instance_by_voice_channel(ctx.author.voice.channel)
         if ctx.author.voice.channel:  # The user who called the bot must be connected to a voice channel
-            instance.get_voice_channel().stop()
+            instance.get_voice_client().stop()
             await self.play_music(ctx)
             await ctx.message.add_reaction("🥴")
             await ctx.message.add_reaction("⏭️")
@@ -217,14 +219,16 @@ class MusicCog(commands.Cog):
 
     @commands.command(aliases = ["p" "pausa", "pausar", "stop"], help = "Pausar")
     async def pause(self, ctx):
-        ctx.author.voice.channel.pause()
+        instance = self.get_instance_by_voice_channel(ctx.author.voice.channel)
+        instance.get_voice_client().pause()
         await ctx.message.add_reaction("😤")
         await ctx.message.add_reaction("✋")
 
 
     @commands.command(aliases = ["r", "seguir", "dale"], help = "Reanudar musica")
     async def resume(self, ctx):
-        ctx.author.voice.channel.resume()
+        instance = self.get_instance_by_voice_channel(ctx.author.voice.channel)
+        instance.get_voice_client().resume()
         await ctx.message.add_reaction("😌")
         await ctx.message.add_reaction("🫱")
         

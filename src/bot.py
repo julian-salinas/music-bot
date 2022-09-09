@@ -9,6 +9,7 @@ class MusicBot:
         self.voice_channel = voice_channel
         self.artist_playing = random.choice(["harry styles", "taylor swift", "drake", "eminem", "beyonce"])
         self.current_song = None
+        self.voice_client = None
 
     def add_to_queue(self, *song):
         self.music_queue.extend(song)
@@ -53,3 +54,6 @@ class MusicBot:
 
     def agregar_cancion_colada(self, song):
         self.music_queue.insert(0, song)
+
+    def get_voice_client(self):
+        return self.voice_client
