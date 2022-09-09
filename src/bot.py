@@ -6,7 +6,7 @@ class MusicBot:
     def __init__(self, voice_channel):
         self.is_playing = False
         self.music_queue = []
-        self.voice_channel = None
+        self.voice_channel = voice_channel
         self.artist_playing = random.choice(["harry styles", "taylor swift", "drake", "eminem", "beyonce"])
         self.current_song = None
 
@@ -17,6 +17,8 @@ class MusicBot:
     def get_next_song(self):
         return self.music_queue.pop(0)
 
+    def get_current_song(self):
+        return self.current_song
 
     def get_voice_channel(self):
         return self.voice_channel
@@ -44,3 +46,10 @@ class MusicBot:
 
     def set_current_song(self, song):
         self.current_song = song
+
+    def get_music_queue(self):
+        return self.music_queue
+
+
+    def agregar_cancion_colada(self, song):
+        self.music_queue.insert(0, song)
