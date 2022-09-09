@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
 import os
-from discord.ext import commands
 import discord
-
+from discord.ext import commands
 from music_commands import MusicCog
 
 grubi = commands.Bot(command_prefix = ">")
