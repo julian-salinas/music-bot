@@ -15,38 +15,51 @@ class MusicBot:
     def get_next_song(self):
         return self.music_queue.pop(0)
 
+
     def get_current_song(self):
         return self.current_song
+
 
     def get_voice_channel(self):
         return self.voice_channel
 
+
     def get_artist_playing(self):
         return self.artist_playing
+
 
     def get_music_queue(self):
         return self.music_queue
 
+
     def get_voice_client(self):
         return self.voice_client
+
 
     def is_playing(self):
         return self.is_playing
 
+
     def alternate_state(self):
         self.is_playing = not self.is_playing
-    
+
+
     def music_queue_is_empty(self):
         return not self.music_queue
+
 
     def add_to_queue(self, *song):
         self.music_queue.extend(song)
 
+
     def sneak_song_in_queue(self, song):
         self.music_queue.insert(0, song)
+
 
     def set_artist_playing(self, artist):
         self.artist_playing = artist
 
+
     def set_current_song(self, song):
         self.current_song = song
+ 
